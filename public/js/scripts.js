@@ -1,4 +1,5 @@
 $(window).on('load', () => generatePalette());
+$('#generate-colors-btn').on('click', () => generatePalette());
 
 const generatePalette = () => {
   console.log('generate palette was called')
