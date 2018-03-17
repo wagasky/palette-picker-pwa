@@ -1,16 +1,16 @@
-.color-block{
+.color-swatch{
   width: 100px;
   height: 200px;
   border: 2px solid black;
 }
 
-.color-block--container {
+.color-swatch--container {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-.small-color-block {
+.small-color-swatch {
   width: 40px;
   height: 40px;
   background: blue;
