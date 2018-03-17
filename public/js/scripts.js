@@ -11,6 +11,7 @@ const generateRandomHex = () => {
 }
 
 const renderPalette = () => {
+  clearPalette();
   const newPalette = createPalette();
 
   newPalette.map(color => renderSwatch(color))
@@ -42,7 +43,12 @@ const renderSwatch = (color) => {
   swatchSection.appendChild(swatchArticle);
 }
 
-
+const clearPalette = () => {
+  const swatchSection = document.querySelector(".color-swatch--container")
+  while(swatchSection.hasChildNodes()) {
+    swatchSection.removeChild(swatchSection.lastChild)
+  }
+}
 
 const putIntoStorage = (palette) => {
   localStorage.setItem("palette", JSON.stringify(palette))
