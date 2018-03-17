@@ -2,9 +2,7 @@ $(window).on('load', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
 
 const generatePalette = () => {
-  console.log('generate palette was called')
   const palette = colorPalette();
-  console.log(palette)
 }
 
 const generateRandomHex = () => {
@@ -23,7 +21,20 @@ const colorPalette = () => {
     })
   }
 
-  console.log(palette);
+  putIntoStorage(palette);
   // let paletteIds = ['swatch-1', 'swatch-2', 'swatch-3', 'swatch-4', 'swatch-5' ]
 }
 
+const putIntoStorage = (palette) => {
+  localStorage.setItem("palette", JSON.stringify(palette))
+}
+
+const pullFromStorage = () => {
+  return JSON.parse(localStorage.getItem("palette"))
+}
+
+
+// const renderPalette
+// call generate palette
+// append the colors to the HTML elements
+// 
