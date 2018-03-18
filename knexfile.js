@@ -6,7 +6,11 @@ module.exports = {
     client: 'pg',
     connection: {
       filename: 'postgres://localhost/palette_picker'
-    }
+    },
+    migrations: {
+      directory: './db/migrations'
+    }, 
+    useNullAsDefault: true
   },
 
   staging: {
