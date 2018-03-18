@@ -42,7 +42,12 @@ const renderSwatch = (swatch) => {
 
   swatchArticle.innerHTML = `
     <p>${swatch.swatch}</p>
-    <button type="button" class="${lockClass}"></button>
+    <button 
+      type="button"
+      onClick="toggleSwatchLock(event)"
+      class="${lockClass}"
+      value="${swatch.swatch}"
+    ></button>
   `
   swatchSection.appendChild(swatchArticle);
 }
@@ -60,5 +65,16 @@ const putIntoStorage = (palette) => {
 
 const pullFromStorage = () => {
   return JSON.parse(localStorage.getItem("palette"))
+}
+
+const toggleSwatchLock = (event) => {
+  const { value } = event.target
+  const palette = pullFromStorage();
+  palette.map(swatch => {
+    if (swatch.swatch === value) {
+      swatch.locked = !swatch.locked
+    }
+  })
+  putIntoStorage(palette);
 }
 
