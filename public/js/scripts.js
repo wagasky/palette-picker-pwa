@@ -2,7 +2,31 @@ $(window).on('load', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
 
 const generatePalette = () => {
-  renderPalette();
+  if (!localStorage.swatch) {
+    clearPalette();
+    const newPalette = createPalette();
+
+    newPalette.map(color => renderSwatch(color))
+    return newPalette;
+  }
+
+  if(localStorage.swatch) {
+    clearPalette();
+    const currentPalette = pullFromStorage();
+
+    currentPalette.map(color => {
+      if (color.swatch.locked) {
+        renderSwatch(color)
+      } else {
+        const newColor = generateRandomHex();
+        color.swatch = newColor
+        renderSwatch(newColor)
+      }
+    })
+    return currentPalette;
+  }
+
+
 }
 
 const generateRandomHex = () => {
@@ -10,12 +34,10 @@ const generateRandomHex = () => {
   return hex
 }
 
-const renderPalette = () => {
+const reRenderPalette = () => {
   clearPalette();
-  const newPalette = createPalette();
-
-  newPalette.map(color => renderSwatch(color))
-  return newPalette;
+  const currentPalette = pullFromStorage();
+  currentPalette.map(color => renderSwatch(color))
 }
 
 const createPalette = () => {
@@ -76,5 +98,11 @@ const toggleSwatchLock = (event) => {
     }
   })
   putIntoStorage(palette);
+  reRenderPalette();
 }
+
+// when you toggle a swatch lock
+// change the value of lock in LS
+// put it back in storage
+// rerender the palette in storage
 
