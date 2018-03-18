@@ -1,5 +1,6 @@
 $(window).on('load', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
+$('#generate-colors-btn').on('click', () => generatePalette());
 
 const generatePalette = () => {
   localStorage.palette ? updatePalette() : newPalette();
@@ -54,7 +55,7 @@ const createPalette = () => {
 } 
 
 const renderSwatch = (swatch) => {
-  const swatchSection = document.querySelector(".color-swatch--container")
+  const swatchSection = document.querySelector(".color-swatch--container");
   const swatchArticle = document.createElement("article");
   const lockClass = swatch.locked ? "fas fa-lock" : "fas fa-lock-open";
   swatchArticle.setAttribute("class", "color-swatch");
@@ -73,7 +74,8 @@ const renderSwatch = (swatch) => {
 }
 
 const clearPalette = () => {
-  const swatchSection = document.querySelector(".color-swatch--container")
+  const swatchSection = document.querySelector(".color-swatch--container");
+
   while(swatchSection.hasChildNodes()) {
     swatchSection.removeChild(swatchSection.lastChild);
   }
@@ -90,6 +92,7 @@ const pullFromStorage = () => {
 const toggleSwatchLock = (event) => {
   const { value } = event.target
   const palette = pullFromStorage();
+
   palette.map(swatch => {
     if (swatch.swatch === value) {
       swatch.locked = !swatch.locked
@@ -99,4 +102,82 @@ const toggleSwatchLock = (event) => {
   reRenderPalette();
 }
 
+const createProject = () => {
+  // if name doesn't exist
+  // take a project name (projectId) and put it in object in db
+  // if it does, give error
+  // rerender projectList
+}
+
+const renderProjects = () => {
+  // grab projects from the db
+  // display projects on page
+  // do this on page load 
+  // method also used within other methods
+}
+
+const renderProjectList = () => {
+  // grab project list from the db
+  // object.keys
+  // render as option tags for the list
+}
+
+const addPalette = () => {
+  // check if palette name exists
+  // object.keys
+  // if not, add palette to db
+  // if so, give error
+  // render projects
+}
+
+const removePalette = () => {
+  // locate relevant project
+  // object.keys and then filter
+  // check for palette name within project id
+  // remove from palette array from db
+  // render projects
+}
+
+// Projects table: 
+
+// [ {
+//   'id': 1,
+//   'title': 'Project 1',
+//   'date': ''
+// }
+
+// {
+//   'id': 2,
+//   'title': 'Project 2',
+//   'date': ''
+// }
+
+// {
+//   'id': 3,
+//   'title': 'Project 3',
+//   'date': ''
+// }
+
+// ]
+
+// palettes table:
+
+// [{
+//   'projectId': "1",
+//   'paletteName': "palette A",
+//   'palette': '[hex, hex, hex, hex, hex]'
+//  },
+
+// {
+//   'projectId': "2",
+//   'paletteName': "palette B",
+//   'palette': '[hex, hex, hex, hex, hex]'
+//  },
+
+//  {
+//   'projectId': "2",
+//   'paletteName': "palette c",
+//   'palette': '[hex, hex, hex, hex, hex]'
+//  },
+// ]
 
