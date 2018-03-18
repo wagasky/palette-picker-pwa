@@ -9,17 +9,12 @@ exports.up = function(knex, Promise) {
     }),
 
     knex.schema.createTable('palettes', table => {
-      table.increments('id').primary
-      table.string('name')
+      table.increments('id').primary();
+      table.string('name');
       table.integer('project_id').unsigned()
       table.foreign('project_id')
-        .references('projects.id')
-
-      table.string('swatch0')
-      table.string('swatch1')
-      table.string('swatch2')
-      table.string('swatch3')
-      table.string('swatch4')
+        .references('project.id');
+      table.specificType('colors', 'text[]');
 
       table.timestamps(true, true)
     })
