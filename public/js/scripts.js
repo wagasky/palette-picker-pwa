@@ -2,32 +2,33 @@ $(window).on('load', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
 
 const generatePalette = () => {
-  if (!localStorage.palette) {
-    clearPalette();
-    const newPalette = createPalette();
-    newPalette.map(color => renderSwatch(color))
-    return newPalette;
-  }
+  localStorage.palette ? updatePalette() : newPalette();
+}
 
-  if(localStorage.palette) {
-    clearPalette();
-    const currentPalette = pullFromStorage();
-    currentPalette.map(color => {
-      if (color.locked) {
-        renderSwatch(color)
-      } 
+const newPalette = () => {
+  const newPalette = createPalette();
 
-      if(!color.locked) {
-        const newColor = generateRandomHex();
-        color.swatch = newColor
-        renderSwatch(newColor);
-      }
-    })
-    putIntoStorage(currentPalette);
-    reRenderPalette();
-  }
+  clearPalette();
+  newPalette.map(color => renderSwatch(color))
+}
 
+const updatePalette = () => {
+  const currentPalette = pullFromStorage();
 
+  clearPalette();
+  currentPalette.map(color => {
+    if (color.locked) {
+      renderSwatch(color)
+    } 
+
+    if(!color.locked) {
+      const newColor = generateRandomHex();
+      color.swatch = newColor
+      renderSwatch(newColor);
+    }
+  })
+  putIntoStorage(currentPalette);
+  reRenderPalette();
 }
 
 const generateRandomHex = () => {
@@ -47,13 +48,9 @@ const createPalette = () => {
   for(let i = 0; i < 5; i++) {
     let swatch = generateRandomHex();
     let locked = false;
-
     palette.push({ swatch, locked })
   }
-
   putIntoStorage(palette);
-  return palette;
-  // let paletteIds = ['swatch-1', 'swatch-2', 'swatch-3', 'swatch-4', 'swatch-5' ]
 } 
 
 const renderSwatch = (swatch) => {
@@ -102,8 +99,4 @@ const toggleSwatchLock = (event) => {
   reRenderPalette();
 }
 
-// when you toggle a swatch lock
-// change the value of lock in LS
-// put it back in storage
-// rerender the palette in storage
 
