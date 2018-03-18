@@ -2,28 +2,29 @@ $(window).on('load', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
 
 const generatePalette = () => {
-  if (!localStorage.swatch) {
+  if (!localStorage.palette) {
     clearPalette();
     const newPalette = createPalette();
-
     newPalette.map(color => renderSwatch(color))
     return newPalette;
   }
 
-  if(localStorage.swatch) {
+  if(localStorage.palette) {
     clearPalette();
     const currentPalette = pullFromStorage();
-
     currentPalette.map(color => {
-      if (color.swatch.locked) {
+      if (color.locked) {
         renderSwatch(color)
-      } else {
+      } 
+
+      if(!color.locked) {
         const newColor = generateRandomHex();
         color.swatch = newColor
-        renderSwatch(newColor)
+        renderSwatch(newColor);
       }
     })
-    return currentPalette;
+    putIntoStorage(currentPalette);
+    reRenderPalette();
   }
 
 
