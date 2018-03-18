@@ -5,7 +5,7 @@ module.exports = {
   development: {
     client: 'pg',
     connection: {
-      filename: 'postgres://localhost/palette_picker'
+      filename: 'postgres://localhost/palette_picker_b'
     },
     migrations: {
       directory: './db/migrations'
@@ -13,7 +13,7 @@ module.exports = {
     seeds: {
       directory: './db/seeds/dev'
     },
-    useNullAsDefault: true
+    setNullAsDefault: true
   },
 
   staging: {

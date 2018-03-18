@@ -1,14 +1,14 @@
 
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex('palettes').del()
+  return knex('palette').del()
       .then(function () {
         return Promise.all([
-          knex('projects').insert({
+          knex('project').insert({
             name: 'TestProject'
           }, 'id')
           .then(project => {
-            return knex('palettes').insert([
+            return knex('palette').insert([
               {
                 name: 'Green Palette', 
                 project_id: project[0], 
