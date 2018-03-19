@@ -1,4 +1,6 @@
 $(window).on('load', () => generatePalette());
+$(window).on('load', () => renderProjectList());
+$(window).on('load', () => renderProjects());
 $('#generate-colors-btn').on('click', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
 
@@ -102,45 +104,126 @@ const toggleSwatchLock = (event) => {
   reRenderPalette();
 }
 
-const createProject = (e) => {
-  e.preventDefault();
+const createProject = (event) => {
+  event.preventDefault();
   const name = $('.saveProjectForm input').val();
 
   postData('/api/v1/projects', { name });
-  console.log('createProject/post was called')
-  // if name doesn't exist
-  // take a project name (projectId) and put it in object in db
-  // if it does, give error
-  // rerender projectList
+  renderProjects();
+  renderProjectList();
 }
 
-const renderProjects = () => {
-  // grab projects from the db
-  // display projects on page
-  // do this on page load 
-  // method also used within other methods
+const renderProjects = async () => {
+  const projects = await getData('/api/v1/projects');
+  const palettes = await getData('/api/v1/palettes');
+  const projectsToDisplay = createProjectDisplay(projects, palettes);
+
+  $('.projects-display').empty();
+  $('.projects-display').prepend(`${projectsToDisplay}`)
 }
 
-const renderProjectList = () => {
-  // grab project list from the db
-  // object.keys
-  // render as option tags for the list
+const createProjectDisplay = (projects, palettes) => {
+  return projects.map( project => {
+    const relevantPalettes = palettes.filter( palette => palette.project_id === project.id);
+    const projectPalettes = relevantPalettes ?
+      createPaletteDisplay(relevantPalettes).join('') : 
+      '<article>This project is empty</article>';
+
+      return (`
+        <article class="project">
+          <div class="project-title-styling">
+            <h2 class="project-name">${project.name}</h2>
+              <button class="fas fa-trash-alt delete"
+                name=${project.id}
+                onclick=removeProject(event)
+              ></button>
+          </div>
+          <div class="project-palette">
+            ${projectPalettes}
+          </div>
+        </article>
+      `)
+  }).join('')
 }
 
-const addPalette = () => {
-  // check if palette name exists
-  // object.keys
-  // if not, add palette to db
-  // if so, give error
-  // render projects
+const createPaletteDisplay = (palettes) => {
+
+  return palettes.map( palette => {
+    return (`
+      <div class="palette-container">
+        <h2>${palette.name}</h2>
+        ${createColorDisplay(palette).join('')}
+        <button class="fas fa-trash-alt delete"
+                name=${palette.id}
+                onclick=removePalette(event)
+        ></button>
+      </div>
+    `)
+
+  })
 }
 
-const removePalette = () => {
-  // locate relevant project
-  // object.keys and then filter
-  // check for palette name within project id
-  // remove from palette array from db
-  // render projects
+const createColorDisplay = (palette) => {
+  return palette.colors.map(color => {
+      return (`
+        <div 
+          class="small-color-swatch"
+          style="background-color:${color};">
+        </div>
+      `)
+    })
+}
+
+const renderProjectList = async () => {
+  const projects = await getData('/api/v1/projects');
+
+  projects.map(project => {
+    addOption(project)
+  })
+}
+
+const addOption = async (project) => {
+  const projectDropDown = document.querySelector("#projectDropDown");
+  const projectOption = document.createElement("option");
+
+  projectOption.setAttribute("value", project.id);
+  projectOption.innerHTML = `
+    ${project.name}
+  `
+  projectDropDown.appendChild(projectOption);
+}
+
+const addPalette = async (event) => {
+  event.preventDefault();
+  const selectedProjectId = document.querySelector("#projectDropDown").value
+  const paletteName = document.querySelector('#paletteName').value;
+  const currentPalette = pullFromStorage()
+  const colors = currentPalette.map(swatch => swatch.swatch)
+  const newPalette = {
+    name: paletteName,
+    project_id: selectedProjectId,
+    colors
+  }
+
+  await postData('/api/v1/palettes', newPalette)
+  renderProjects();
+}
+
+const removePalette = async (event) => {
+  const paletteId = event.target.name;
+  await fetch(`/api/v1/palettes/${paletteId}`, {
+    method: 'DELETE'
+  })
+  renderProjects();
+}
+
+const removeProject = async (event) => {
+  const projectId = event.target.name;
+  await fetch(`/api/v1/projects/${projectId}`, {
+    method: 'DELETE'
+  })
+  renderProjects();
+  renderProjectList();
 }
 
 const postData = (url, body) => {
@@ -151,5 +234,11 @@ const postData = (url, body) => {
       'Content-Type': 'application/json'
     })
   })
+}
+
+const getData = async (url) => {
+  const response = await fetch(url);
+  const json = await response.json();
+  return json;
 }
 
