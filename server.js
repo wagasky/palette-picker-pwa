@@ -29,7 +29,6 @@ app.get('/api/v1/projects', (request, response) => {
 
 app.post('/api/v1/projects', (request, response) => {
   const projects = request.body;
-  console.log('post request is being called', projects)
   for(let requiredParameter of ['name']) {
     if(!projects[requiredParameter]) {
       return response
@@ -42,6 +41,36 @@ app.post('/api/v1/projects', (request, response) => {
     .then(projects => {
       console.log('id', projects[0])
       response.status(201).json({ id: projects[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
+app.get('/api/v1/palettes', (request, response) => {
+  
+  database('palettes').select()
+    .then(project => {
+      response.status(200).json(project)
+    })
+    .catch(error => {
+      response.status(500).json({ error })
+    })
+});
+
+app.post('/api/v1/palettes', (request, response) => {
+  const palette = request.body;
+  for(let requiredParameter of ['name', 'project_id', 'colors']) {
+    if(!palette[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `You're missing a "${requiredParameter}"`})
+    }
+  }
+  database('palettes').insert(palette, 'id')
+    .then(palette => {
+      console.log('post palettes being called')
+      response.status(201).json({ id: palette[0] })
     })
     .catch(error => {
       response.status(500).json({ error });

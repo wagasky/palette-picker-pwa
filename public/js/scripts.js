@@ -3,6 +3,7 @@ $(window).on('load', () => renderProjectList());
 $('#generate-colors-btn').on('click', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
 
+
 const generatePalette = () => {
   localStorage.palette ? updatePalette() : newPalette();
 }
@@ -103,14 +104,11 @@ const toggleSwatchLock = (event) => {
   reRenderPalette();
 }
 
-const createProject = (e) => {
-  e.preventDefault();
+const createProject = (event) => {
+  event.preventDefault();
   const name = $('.saveProjectForm input').val();
 
   postData('/api/v1/projects', { name });
-  // if name doesn't exist
-  // take a project name (projectId) and put it in object in db
-  // if it does, give error
   // rerender projectList
 }
 
@@ -137,16 +135,26 @@ const addOption = async (project) => {
   projectOption.innerHTML = `
     ${project.name}
   `
-
   projectDropDown.appendChild(projectOption);
 }
 
-const addPalette = () => {
-  // check if palette name exists
-  // object.keys
-  // if not, add palette to db
-  // if so, give error
+const addPalette = async (event) => {
+  event.preventDefault();
+  const selectedProjectId = document.querySelector("#projectDropDown").value
+  const paletteName = document.querySelector('#paletteName').value;
+  const currentPalette = pullFromStorage()
+  const colors = currentPalette.map(swatch => swatch.swatch)
+  const newPalette = {
+    name: paletteName,
+    project_id: selectedProjectId,
+    colors
+  }
+  await postData('/api/v1/palettes', newPalette)
   // render projects
+}
+
+const postPalette = async (palette, id) => {
+
 }
 
 const removePalette = () => {
