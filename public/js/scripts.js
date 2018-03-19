@@ -137,7 +137,10 @@ const createProjectDisplay = (projects, palettes) => {
         <article class="project">
           <div class="project-title-styling">
             <h2 class="project-name">${project.name}</h2>
-            <p><i class="fas fa-trash-alt" id="deleteProject"></i></p>
+              <button class="fas fa-trash-alt delete"
+                name=${project.id}
+                onclick=removeProject(event)
+              ></button>
           </div>
           <div class="project-palette">
             ${projectPalettes}
@@ -154,7 +157,10 @@ const createPaletteDisplay = (palettes) => {
       <div class="palette-container">
         <h2>${palette.name}</h2>
         ${createColorDisplay(palette).join('')}
-        <p><i class="fas fa-trash-alt" id="deletePalette"></i></p>
+        <button class="fas fa-trash-alt delete"
+                name=${palette.id}
+                onclick=removePalette(event)
+        ></button>
       </div>
     `)
 
@@ -206,12 +212,21 @@ const addPalette = async (event) => {
   // render projects
 }
 
-const removePalette = () => {
-  // locate relevant project
-  // object.keys and then filter
-  // check for palette name within project id
-  // remove from palette array from db
+const removePalette = async (event) => {
+  const paletteId = event.target.name;
+  await fetch(`/api/v1/palettes/${paletteId}`, {
+    method: 'DELETE'
+  })
+  console.log(paletteId, 'deleted')
   // render projects
+}
+
+const removeProject = async (event) => {
+  const projectId = event.target.name;
+  await fetch(`/api/v1/projects/${projectId}`, {
+    method: 'DELETE'
+  })
+  console.log(projectId, 'deleted')
 }
 
 const postData = (url, body) => {
