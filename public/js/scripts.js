@@ -102,7 +102,12 @@ const toggleSwatchLock = (event) => {
   reRenderPalette();
 }
 
-const createProject = () => {
+const createProject = (e) => {
+  e.preventDefault();
+  const name = $('.saveProjectForm input').val();
+
+  postData('/api/v1/projects', { name });
+  console.log('createProject/post was called')
   // if name doesn't exist
   // take a project name (projectId) and put it in object in db
   // if it does, give error
@@ -138,46 +143,13 @@ const removePalette = () => {
   // render projects
 }
 
-// Projects table: 
-
-// [ {
-//   'id': 1,
-//   'title': 'Project 1',
-//   'date': ''
-// }
-
-// {
-//   'id': 2,
-//   'title': 'Project 2',
-//   'date': ''
-// }
-
-// {
-//   'id': 3,
-//   'title': 'Project 3',
-//   'date': ''
-// }
-
-// ]
-
-// palettes table:
-
-// [{
-//   'projectId': "1",
-//   'paletteName': "palette A",
-//   'palette': '[hex, hex, hex, hex, hex]'
-//  },
-
-// {
-//   'projectId': "2",
-//   'paletteName': "palette B",
-//   'palette': '[hex, hex, hex, hex, hex]'
-//  },
-
-//  {
-//   'projectId': "2",
-//   'paletteName': "palette c",
-//   'palette': '[hex, hex, hex, hex, hex]'
-//  },
-// ]
+const postData = (url, body) => {
+  fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(body), 
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  })
+}
 
