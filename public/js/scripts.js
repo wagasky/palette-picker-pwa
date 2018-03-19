@@ -1,5 +1,6 @@
 $(window).on('load', () => generatePalette());
 $(window).on('load', () => renderProjectList());
+$(window).on('load', () => renderProjects());
 $('#generate-colors-btn').on('click', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
 
@@ -112,11 +113,57 @@ const createProject = (event) => {
   // rerender projectList
 }
 
-const renderProjects = () => {
-  // grab projects from the db
-  // display projects on page
+const renderProjects = async () => {
+  const projects = await getData('/api/v1/projects');
+  const palettes = await getData('/api/v1/palettes');
+  const projectsToDisplay = createProjectDisplay(projects, palettes);
+
+  $('.projects-display').empty();
+  $('.projects-display').prepend(`${projectsToDisplay}`)
+
   // do this on page load 
-  // method also used within other methods
+
+}
+
+const createProjectDisplay = (projects, palettes) => {
+  return projects.map( project => {
+    const relevantPalettes = palettes.filter( palette => palette.project_id === project.id);
+    const projectPalettes = relevantPalettes ?
+      createPaletteDisplay(relevantPalettes).join('') : 
+      '<article>This project is empty</article>';
+
+      console.log(project.name)
+      return (`
+        <article class="project">
+          <h2 class="project-name">${project.name}</h2>
+          <div class="project-palette">
+            ${projectPalettes}
+          </div>
+        </article>
+      `)
+  }).join('')
+}
+
+const createPaletteDisplay = (palettes) => {
+
+  return palettes.map( palette => {
+    return (`
+      <h2>${palette.name}</h2>
+      ${createColorDisplay(palette).join('')}
+    `)
+
+  })
+}
+
+const createColorDisplay = (palette) => {
+  return palette.colors.map(color => {
+      return (`
+        <div 
+          class="small-color-swatch"
+          style="background-color:${color};">
+        </div>
+      `)
+    })
 }
 
 const renderProjectList = async () => {
@@ -151,10 +198,6 @@ const addPalette = async (event) => {
   }
   await postData('/api/v1/palettes', newPalette)
   // render projects
-}
-
-const postPalette = async (palette, id) => {
-
 }
 
 const removePalette = () => {
