@@ -7,10 +7,9 @@ const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
 app.use(express.static('public'))
-
+app.use(bodyParser.json());
 app.set('port', process.env.PORT || 3000);
 app.locals.title = "Palette Picker";
-app.use(bodyParser.json());
 
 app.get('/', (request, response) => {
 
@@ -39,7 +38,6 @@ app.post('/api/v1/projects', (request, response) => {
 
   database('projects').insert(projects, 'id')
     .then(projects => {
-      console.log('id', projects[0])
       response.status(201).json({ id: projects[0] })
     })
     .catch(error => {
@@ -48,7 +46,6 @@ app.post('/api/v1/projects', (request, response) => {
 });
 
 app.get('/api/v1/palettes', (request, response) => {
-  
   database('palettes').select()
     .then(project => {
       response.status(200).json(project)

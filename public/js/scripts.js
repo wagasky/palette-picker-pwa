@@ -4,7 +4,6 @@ $(window).on('load', () => renderProjects());
 $('#generate-colors-btn').on('click', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
 
-
 const generatePalette = () => {
   localStorage.palette ? updatePalette() : newPalette();
 }
@@ -130,7 +129,6 @@ const createProjectDisplay = (projects, palettes) => {
       createPaletteDisplay(relevantPalettes).join('') : 
       '<article>This project is empty</article>';
 
-      console.log(project.name)
       return (`
         <article class="project">
           <div class="project-title-styling">
@@ -206,6 +204,7 @@ const addPalette = async (event) => {
     project_id: selectedProjectId,
     colors
   }
+
   await postData('/api/v1/palettes', newPalette)
   renderProjects();
 }
