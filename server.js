@@ -77,6 +77,21 @@ app.post('/api/v1/palettes', (request, response) => {
     });
 });
 
+app.delete('/api/v1/palettes/:id', (request, response) => {
+  const { id } = request.params
+  
+  database('palettes').where("id", id).del()
+    .then( deleted => {
+      if (!deleted) {
+        return response.status(404).json({error: 'no palette to delete'})
+      }
+      response.status(204).json(deleted)
+    })
+    .catch( error => { 
+      response.status(500).json({ error })
+    })
+})
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}`)
 })
