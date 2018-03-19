@@ -110,7 +110,8 @@ const createProject = (event) => {
   const name = $('.saveProjectForm input').val();
 
   postData('/api/v1/projects', { name });
-  // rerender projectList
+  renderProjects();
+  renderProjectList();
 }
 
 const renderProjects = async () => {
@@ -120,9 +121,6 @@ const renderProjects = async () => {
 
   $('.projects-display').empty();
   $('.projects-display').prepend(`${projectsToDisplay}`)
-
-  // do this on page load 
-
 }
 
 const createProjectDisplay = (projects, palettes) => {
@@ -209,7 +207,7 @@ const addPalette = async (event) => {
     colors
   }
   await postData('/api/v1/palettes', newPalette)
-  // render projects
+  renderProjects();
 }
 
 const removePalette = async (event) => {
@@ -217,8 +215,7 @@ const removePalette = async (event) => {
   await fetch(`/api/v1/palettes/${paletteId}`, {
     method: 'DELETE'
   })
-  console.log(paletteId, 'deleted')
-  // render projects
+  renderProjects();
 }
 
 const removeProject = async (event) => {
@@ -226,7 +223,8 @@ const removeProject = async (event) => {
   await fetch(`/api/v1/projects/${projectId}`, {
     method: 'DELETE'
   })
-  console.log(projectId, 'deleted')
+  renderProjects();
+  renderProjectList();
 }
 
 const postData = (url, body) => {
