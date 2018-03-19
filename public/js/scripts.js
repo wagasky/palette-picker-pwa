@@ -1,4 +1,5 @@
 $(window).on('load', () => generatePalette());
+$(window).on('load', () => renderProjectList());
 $('#generate-colors-btn').on('click', () => generatePalette());
 $('#generate-colors-btn').on('click', () => generatePalette());
 
@@ -107,7 +108,6 @@ const createProject = (e) => {
   const name = $('.saveProjectForm input').val();
 
   postData('/api/v1/projects', { name });
-  console.log('createProject/post was called')
   // if name doesn't exist
   // take a project name (projectId) and put it in object in db
   // if it does, give error
@@ -121,10 +121,24 @@ const renderProjects = () => {
   // method also used within other methods
 }
 
-const renderProjectList = () => {
-  // grab project list from the db
-  // object.keys
-  // render as option tags for the list
+const renderProjectList = async () => {
+  const projects = await getData('/api/v1/projects');
+
+  projects.map(project => {
+    addOption(project)
+  })
+}
+
+const addOption = async (project) => {
+  const projectDropDown = document.querySelector("#projectDropDown");
+  const projectOption = document.createElement("option");
+
+  projectOption.setAttribute("value", project.id);
+  projectOption.innerHTML = `
+    ${project.name}
+  `
+
+  projectDropDown.appendChild(projectOption);
 }
 
 const addPalette = () => {
@@ -151,5 +165,11 @@ const postData = (url, body) => {
       'Content-Type': 'application/json'
     })
   })
+}
+
+const getData = async (url) => {
+  const response = await fetch(url);
+  const json = await response.json();
+  return json;
 }
 
