@@ -135,7 +135,10 @@ const createProjectDisplay = (projects, palettes) => {
       console.log(project.name)
       return (`
         <article class="project">
-          <h2 class="project-name">${project.name}</h2>
+          <div class="project-title-styling">
+            <h2 class="project-name">${project.name}</h2>
+            <p><i class="fas fa-trash-alt" id="deleteProject"></i></p>
+          </div>
           <div class="project-palette">
             ${projectPalettes}
           </div>
@@ -148,8 +151,11 @@ const createPaletteDisplay = (palettes) => {
 
   return palettes.map( palette => {
     return (`
-      <h2>${palette.name}</h2>
-      ${createColorDisplay(palette).join('')}
+      <div class="palette-container">
+        <h2>${palette.name}</h2>
+        ${createColorDisplay(palette).join('')}
+        <p><i class="fas fa-trash-alt" id="deletePalette"></i></p>
+      </div>
     `)
 
   })

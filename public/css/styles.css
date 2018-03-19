@@ -29,7 +29,30 @@
   margin: 0px 10px;
 }
 
-.project-palette {
+.project-title-styling {
   display: flex;
   flex-direction: row;
 }
+
+.project-palette {
+  display: flex;
+  flex-direction: column;
+}
+
+.palette-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.project-display {
+  display: flex;
+  flex-direction: column;
+}
+
+.project {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
