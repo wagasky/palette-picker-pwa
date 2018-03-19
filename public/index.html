@@ -21,24 +21,25 @@
       </div>
       <button type="button" id="generate-colors-btn"
       >Generate Palette</button>
-      <form>
+      <form class="savePaletteForm" onsubmit="addPalette(event)">
         <p>Save Palette</p>
         <select>
           <option>Project 1</option>
-          <option>Project 2</option>
-          <option>Project 3</option>
         </select>
-        <input type="text" name="">
+        <label for="paletteName"></label>
+        <input id="paletteName" type="text" name="paletteName" placeholder="palette name">
         <input type="submit" name="">
       </form>
     </section>
     <section class="project-creation">
       <p>Create a Project</p>
-      <form>
-        <input type="text" name="">
-        <input type="submit" name="">
+      <form class="saveProjectForm" onsubmit="createProject(event)">
+        <label for="projectName"></label>
+        <input id="projectName" type="text" name="" placeholder="project name">
+        <input type="submit" name="save">
       </form>
     </section>
+
     <section class="project-display">
       <article class="project">
         <h2>Project 1</h2>
