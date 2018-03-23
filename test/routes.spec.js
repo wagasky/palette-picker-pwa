@@ -68,23 +68,45 @@ describe('API Routes', () => {
    })
   })
 
-  describe('GET /api/v1/projects', () => {
-    it('should return all of the projects', () => {
-      return chai.request(server)
-      .get('/api/v1/projects')
-      .then(response => {
-        response.should.have.status(200);
-        response.should.be.json;
-        response.body.should.be.a('array');
-        response.body.length.should.equal(1);
-        response.body[0].should.have.property('name')
-        response.body[0].name.should.equal('TestProject3')
-      })
-      .catch(err => {
-        throw err;
+    describe('GET /api/v1/projects', () => {
+      it('should return all of the projects', () => {
+        return chai.request(server)
+        .get('/api/v1/projects')
+        .then(response => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(1);
+          response.body[0].should.have.property('name')
+          response.body[0].name.should.equal('TestProject3')
+        })
+        .catch(err => {
+          throw err;
+        });
       });
     });
-  });
+
+    describe('GET /api/v1/palettes', () => {
+      it('should return all of the palettes', () => {
+        return chai.request(server)
+        .get('/api/v1/palettes')
+        .then(response => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(2);
+          response.body[0].should.have.property('name')
+          response.body[0].name.should.equal('Green Palette')
+          response.body[0].should.have.property('id');
+          response.body[0].id.should.equal(1);
+          response.body[0].should.have.property('colors');
+          response.body[0].colors.should.be.a('array');
+        })
+        .catch(err => {
+          throw err;
+        });
+      });
+    });
 
     describe('POST /api/v1/projects', () => {
       it('should create a new project within the database', () => {
