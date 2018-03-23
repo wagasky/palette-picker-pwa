@@ -11,7 +11,6 @@ const database = require('knex')(configuration)
 
 describe('Client Routes', () => {
   
-
   before( done => {   
    database.migrate.rollback()
     .then( () => {
@@ -29,7 +28,7 @@ describe('Client Routes', () => {
     })
   })
   
-   it('should return the homepage', () => {
+  it('should return the homepage', () => {
     return chai.request(server)
     .get('/')
     .then(response => {
@@ -68,27 +67,38 @@ describe('API Routes', () => {
    })
   })
 
-    describe('GET /api/v1/projects', () => {
-      it('should return all of the projects', () => {
-        return chai.request(server)
-        .get('/api/v1/projects')
-        .then(response => {
-          response.should.have.status(200);
-          response.should.be.json;
-          response.body.should.be.a('array');
-          response.body.length.should.equal(1);
-          response.body[0].should.have.property('name')
-          response.body[0].name.should.equal('TestProject3')
-        })
-        .catch(err => {
-          throw err;
-        });
+  describe('GET /api/v1/projects', () => {
+    it('should return all of the projects', () => {
+      return chai.request(server)
+      .get('/api/v1/projects')
+      .then(response => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.be.a('array');
+        response.body.length.should.equal(1);
+        response.body[0].should.have.property('name')
+        response.body[0].name.should.equal('TestProject3')
+      })
+      .catch(err => {
+        throw err;
       });
     });
 
-    describe('GET /api/v1/palettes', () => {
-      it('should return all of the palettes', () => {
-        return chai.request(server)
+    it('should not return all projects if called with incorrect params', () => {
+      return chai.request(server)
+      .get('/api/v1/projects%$%$%$')
+      .then(response => {
+        response.should.have.status(404);
+      })
+      .catch(err => {
+        throw err;
+      });
+    });
+  });
+
+  describe('GET /api/v1/palettes', () => {
+    it('should return all of the palettes', () => {
+      return chai.request(server)
         .get('/api/v1/palettes')
         .then(response => {
           response.should.have.status(200);
@@ -106,10 +116,21 @@ describe('API Routes', () => {
           throw err;
         });
       });
+
+    it('should not return all palettes if called with incorrect params', () => {
+      return chai.request(server)
+        .get('/api/v1/palettes@#@$#$#')
+        .then(response => {
+          response.should.have.status(404);
+        })
+        .catch(err => {
+          throw err;
+        });
+      });
     });
 
-    describe('POST /api/v1/projects', () => {
-      it('should create a new project within the database', () => {
+  describe('POST /api/v1/projects', () => {
+    it('should create a new project within the database', () => {
       return chai.request(server)
       .post('/api/v1/projects')
       .send({                  
@@ -125,10 +146,27 @@ describe('API Routes', () => {
         throw err;
       });
     });
+
+    it('should not create a new project if called with incorrect params', () => {
+      return chai.request(server)
+      .post('/api/v1/projects')
+      .send({                  
+        nomnom: 'Test',
+      })
+      .then(response => {
+        response.should.have.status(422); 
+        response.should.be.json;
+        response.body.should.be.a('object');
+        response.body.error.should.equal(`You're missing a "name"`);
+      })
+      .catch(err => {
+        throw err;
+      });
+    });
   });
 
-    describe('POST /api/v1/palettes', () => {
-      it('should create a new palette within a project', () => {
+  describe('POST /api/v1/palettes', () => {
+    it('should create a new palette within a project', () => {
       return chai.request(server)
       .post('/api/v1/palettes')
       .send({                  
@@ -147,10 +185,28 @@ describe('API Routes', () => {
         throw err;
       });
     });
+
+    it('should not create a new palette if missing body params', () => {
+      return chai.request(server)
+      .post('/api/v1/palettes')
+      .send({                  
+        name: 'Bad ID palette',
+        colors: ['#3db8bb', '#3db8bb', '#3db8bb', '#3db8bb', '#3db8bb']
+      })
+      .then(response => {
+        response.should.have.status(422); 
+        response.should.be.json;
+        response.body.should.be.a('object');
+        response.body.error.should.equal(`You're missing a "project_id"`);
+      })
+      .catch(err => {
+        throw err;
+      });
+    });
   });
 
-    describe('DELETE /api/v1/palettes/:id', () => {
-      it('should delete a palette with a specific id', () => {
+  describe('DELETE /api/v1/palettes/:id', () => {
+    it('should delete a palette with a specific id', () => {
       return chai.request(server)
       .delete('/api/v1/palettes/2')
       .then(response => {
@@ -160,10 +216,8 @@ describe('API Routes', () => {
         throw err;
       });
     });
-  });
 
-    describe('DELETE /api/v1/palettes/:id', () => {
-      it('should return an error when a nonexistent palette is deleted', () => {
+    it('should return an error when a nonexistent palette is deleted', () => {
       return chai.request(server)
       .delete('/api/v1/palettes/100')
       .then(response => {
