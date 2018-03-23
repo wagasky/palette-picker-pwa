@@ -148,4 +148,33 @@ describe('API Routes', () => {
       });
     });
   });
+
+    describe('DELETE /api/v1/palettes/:id', () => {
+      it('should delete a palette with a specific id', () => {
+      return chai.request(server)
+      .delete('/api/v1/palettes/2')
+      .then(response => {
+        response.should.have.status(204);
+      })
+      .catch(err => {
+        throw err;
+      });
+    });
+  });
+
+    describe('DELETE /api/v1/palettes/:id', () => {
+      it('should return an error when a nonexistent palette is deleted', () => {
+      return chai.request(server)
+      .delete('/api/v1/palettes/100')
+      .then(response => {
+        response.should.have.status(404);
+        response.should.be.json;
+        response.body.should.be.a('object');
+        response.body.error.should.equal('no palette to delete');
+      })
+      .catch(err => {
+        throw err;
+      });
+    });
+  });
 });
