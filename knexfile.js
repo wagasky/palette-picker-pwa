@@ -14,20 +14,16 @@ module.exports = {
     setNullAsDefault: true
   },
 
-  staging: {
+  test: {
     client: 'pg',
-    connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
+    connection: 'postgres://localhost/palette_picker_test',
     migrations: {
-      tableName: 'knex_migrations'
-    }
+      directory: './db/migrations'
+    },
+    seeds: {
+      directory: './db/seeds/test'
+    },
+    useNullAsDefault: true
   },
 
   production: {

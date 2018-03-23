@@ -5,7 +5,30 @@ const server = require('../server');
 
 chai.use(chaiHttp);
 
+const environment = process.env.NODE_ENV || 'test'
+const configuration = require('../knexfile')[environment]
+const database = require('knex')(configuration)
+
 describe('Client Routes', () => {
+  
+
+  before( done => {   
+   database.migrate.rollback()
+    .then( () => {
+      return database.migrate.latest()
+    })
+    .then( () => {
+      done()
+    })
+  })
+
+  beforeEach( done => {
+    database.seed.run()
+      .then( () => {
+        done()
+    })
+  })
+  
    it('should return the homepage', () => {
     return chai.request(server)
     .get('/')
@@ -32,6 +55,19 @@ describe('Client Routes', () => {
 
 describe('API Routes', () => {
 
+  beforeEach( done => {
+    database.migrate.rollback()
+      .then( () => {
+        database.migrate.latest()
+      .then( () => {
+         return database.seed.run()
+        .then( () => {
+          done()
+        })
+      })
+   })
+  })
+
   describe('GET /api/v1/projects', () => {
     it('should return all of the projects', () => {
       return chai.request(server)
@@ -40,9 +76,9 @@ describe('API Routes', () => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
-        response.body.length.should.equal(2);
+        response.body.length.should.equal(1);
         response.body[0].should.have.property('name')
-        response.body[0].name.should.equal('Bright Project')
+        response.body[0].name.should.equal('TestProject3')
       })
       .catch(err => {
         throw err;
@@ -61,9 +97,7 @@ describe('API Routes', () => {
         response.should.have.status(201); 
         response.body.should.be.a('object');
         response.body.should.have.property('id');
-        response.body.id.should.equal('4');
-        response.body.should.have.property('name');
-        response.body.name.should.equal('Testy');
+        response.body.id.should.equal(2);
       })
       .catch(err => {
         throw err;
