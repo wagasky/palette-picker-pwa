@@ -50,4 +50,24 @@ describe('API Routes', () => {
     });
   });
 
+    describe('POST /api/v1/projects', () => {
+      it('should create a new project within the database', () => {
+      return chai.request(server)
+      .post('/api/v1/projects')
+      .send({                  
+        name: 'Test',
+      })
+      .then(response => {
+        response.should.have.status(201); 
+        response.body.should.be.a('object');
+        response.body.should.have.property('id');
+        response.body.id.should.equal('4');
+        response.body.should.have.property('name');
+        response.body.name.should.equal('Testy');
+      })
+      .catch(err => {
+        throw err;
+      });
+    });
+  });
 });
