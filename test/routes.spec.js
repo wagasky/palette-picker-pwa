@@ -126,4 +126,26 @@ describe('API Routes', () => {
       });
     });
   });
+
+    describe('POST /api/v1/palettes', () => {
+      it('should create a new palette within a project', () => {
+      return chai.request(server)
+      .post('/api/v1/palettes')
+      .send({                  
+        name: 'Blah Palette',
+        project_id: 1,
+        colors: ['#3db8bb', '#3db8bb', '#3db8bb', '#3db8bb', '#3db8bb']
+      })
+      .then(response => {
+        response.should.have.status(201);
+        response.should.be.json;
+        response.body.should.be.a('object');
+        response.body.should.have.property('id');
+        response.body.id.should.equal(3);
+      })
+      .catch(err => {
+        throw err;
+      });
+    });
+  });
 });
