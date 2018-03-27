@@ -11,10 +11,6 @@ app.use(bodyParser.json());
 app.set('port', process.env.PORT || 3000);
 app.locals.title = "Palette Picker";
 
-app.get('/', (request, response) => {
-
-});
-
 
 app.get('/api/v1/projects', (request, response) => {
   
