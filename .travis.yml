@@ -1,0 +1,17 @@
+# language: node_js
+# node_js:
+#   - node
+# services:
+#   - postgresql
+# before_install:
+#   - psql -c 'create database palette_picker_test;' -U postgres
+# notifications:
+#  - email: false
+# deploy:
+#   provider: heroku
+#   api_key:
+#     secure:
+#   app: palette_picker
+#   skip_cleanup: true
+
+# travis encrypt $(heroku auth:token) --add deploy.api_key --org
