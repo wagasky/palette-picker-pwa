@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-const cors = require('cors')
+// const cors = require('cors')
 
 const requireHTTPS = (req, res, next) => {
   if (req.headers['x-forwarded-proto'] !== 'https') {
@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use(bodyParser.json());
 app.set('port', process.env.PORT || 3000);
 app.use(express.static('public'))
-app.use(cors())
+// app.use(cors())
 app.locals.title = "Palette Picker";
 
 app.get('/api/v1/projects', (request, response) => {
