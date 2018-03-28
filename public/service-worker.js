@@ -8,7 +8,6 @@ this.addEventListener('install', event => {
         '/css/app.css',
         '/img/logo.png',
         '/lib/jquery-3.2.1.js',
-        '/lib/markdown-it.min.js'
       ])
     })
   );
