@@ -242,3 +242,17 @@ const getData = async (url) => {
   return json;
 }
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../service-worker.js')
+      .then(registration => {
+        console.log('Service worker registration successful');
+
+      })
+      .catch(error => {
+        console.log('Service worker failed', error);
+
+      })
+  })
+} 
+
